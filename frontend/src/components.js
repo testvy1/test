@@ -407,28 +407,67 @@ export const WhyStudySection = () => {
 export const Leaderboard = () => {
   const [leaders, setLeaders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Mock data for demonstration if Firestore is not available
+  const mockLeaders = [
+    { id: '1', name: 'Ахмед Иванов', totalScore: 45, createdAt: new Date() },
+    { id: '2', name: 'Фатима Петрова', totalScore: 42, createdAt: new Date() },
+    { id: '3', name: 'Умар Сидоров', totalScore: 38, createdAt: new Date() },
+    { id: '4', name: 'Айша Козлова', totalScore: 35, createdAt: new Date() },
+    { id: '5', name: 'Али Морозов', totalScore: 32, createdAt: new Date() },
+    { id: '6', name: 'Хадиджа Волкова', totalScore: 28, createdAt: new Date() },
+    { id: '7', name: 'Юсуф Лебедев', totalScore: 25, createdAt: new Date() },
+    { id: '8', name: 'Зейнаб Новикова', totalScore: 22, createdAt: new Date() },
+    { id: '9', name: 'Ибрагим Орлов', totalScore: 18, createdAt: new Date() },
+    { id: '10', name: 'Марьам Соколова', totalScore: 15, createdAt: new Date() },
+  ];
 
   useEffect(() => {
-    const fetchLeaderboard = () => {
-      const q = query(
-        collection(db, 'users'),
-        orderBy('totalScore', 'desc'),
-        limit(10)
-      );
+    const fetchLeaderboard = async () => {
+      try {
+        const q = query(
+          collection(db, 'users'),
+          orderBy('totalScore', 'desc'),
+          limit(10)
+        );
 
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const leaderboardData = [];
-        snapshot.forEach((doc) => {
-          leaderboardData.push({ id: doc.id, ...doc.data() });
-        });
-        setLeaders(leaderboardData);
+        const unsubscribe = onSnapshot(q, 
+          (snapshot) => {
+            const leaderboardData = [];
+            snapshot.forEach((doc) => {
+              leaderboardData.push({ id: doc.id, ...doc.data() });
+            });
+            
+            // If no data from Firestore, use mock data
+            if (leaderboardData.length === 0) {
+              setLeaders(mockLeaders);
+            } else {
+              setLeaders(leaderboardData);
+            }
+            setLoading(false);
+            setError(null);
+          },
+          (error) => {
+            console.error('Firestore error:', error);
+            // Use mock data when Firestore fails
+            setLeaders(mockLeaders);
+            setLoading(false);
+            setError('Используются демо-данные. Настройте Firestore для реальных данных.');
+          }
+        );
+
+        return unsubscribe;
+      } catch (err) {
+        console.error('Failed to setup Firestore listener:', err);
+        // Fallback to mock data
+        setLeaders(mockLeaders);
         setLoading(false);
-      });
-
-      return unsubscribe;
+        setError('Используются демо-данные. Настройте Firestore для реальных данных.');
+      }
     };
 
-    return fetchLeaderboard();
+    fetchLeaderboard();
   }, []);
 
   if (loading) {
