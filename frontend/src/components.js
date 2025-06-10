@@ -526,3 +526,535 @@ export const Leaderboard = () => {
     </div>
   );
 };
+
+// Lessons Component
+export const Lessons = ({ setCurrentPage }) => {
+  const { currentUser } = useAuth();
+  const [showAuthMessage, setShowAuthMessage] = useState(false);
+
+  const lessons = [
+    {
+      id: 1,
+      title: "Основы веры",
+      description: "Изучите пять столпов ислама и основные принципы веры",
+      image: "https://images.pexels.com/photos/7249250/pexels-photo-7249250.jpeg",
+      duration: "15 мин",
+      questions: 10,
+      difficulty: "Легко"
+    },
+    {
+      id: 2,
+      title: "Практика веры",
+      description: "Узнайте о ежедневных практиках и обрядах",
+      image: "https://images.unsplash.com/photo-1582033131298-5bb54c589518",
+      duration: "20 мин",
+      questions: 15,
+      difficulty: "Средне"
+    },
+    {
+      id: 3,
+      title: "Этика ислама",
+      description: "Изучите моральные принципы и этические нормы",
+      image: "https://images.pexels.com/photos/32470206/pexels-photo-32470206.jpeg",
+      duration: "25 мин",
+      questions: 12,
+      difficulty: "Легко"
+    },
+    {
+      id: 4,
+      title: "История ислама",
+      description: "Познакомьтесь с историей возникновения и развития ислама",
+      image: "https://images.unsplash.com/photo-1655552090825-e12b509c83ca",
+      duration: "30 мин",
+      questions: 20,
+      difficulty: "Сложно"
+    }
+  ];
+
+  const handleStartLesson = (lessonId) => {
+    if (!currentUser) {
+      setShowAuthMessage(true);
+      setTimeout(() => setShowAuthMessage(false), 3000);
+      return;
+    }
+    setCurrentPage(`quiz-${lessonId}`);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-white to-teal-50 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Уроки ислама</h1>
+          <p className="text-lg text-gray-600">Изучите 4 самых важных предмета для верующего</p>
+        </div>
+
+        {showAuthMessage && (
+          <div className="fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg z-50">
+            <p>Войдите в систему, чтобы проходить уроки</p>
+          </div>
+        )}
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+          {lessons.map((lesson) => (
+            <div key={lesson.id} className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+              <div className="relative h-48">
+                <img
+                  src={lesson.image}
+                  alt={lesson.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute top-4 left-4">
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    lesson.difficulty === 'Легко' ? 'bg-green-100 text-green-800' :
+                    lesson.difficulty === 'Средне' ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-red-100 text-red-800'
+                  }`}>
+                    {lesson.difficulty}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{lesson.title}</h3>
+                <p className="text-gray-600 mb-4">{lesson.description}</p>
+                
+                <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                  <span className="flex items-center">
+                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {lesson.duration}
+                  </span>
+                  <span className="flex items-center">
+                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {lesson.questions} вопросов
+                  </span>
+                </div>
+                
+                <button
+                  onClick={() => handleStartLesson(lesson.id)}
+                  className="w-full bg-teal-500 text-white py-3 px-4 rounded-lg hover:bg-teal-600 transition-colors font-medium"
+                >
+                  Начать урок
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-16 text-center">
+          <div className="bg-white rounded-2xl p-8 shadow-lg">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Как проходит обучение?</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.832 18.477 19.246 18 17.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                <h3 className="font-semibold text-gray-900">Изучение материала</h3>
+                <p className="text-gray-600 text-sm">Читайте теоретический материал по теме урока</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="font-semibold text-gray-900">Прохождение теста</h3>
+                <p className="text-gray-600 text-sm">Отвечайте на вопросы по изученному материалу</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <h3 className="font-semibold text-gray-900">Получение баллов</h3>
+                <p className="text-gray-600 text-sm">За каждый правильный ответ получайте +1 балл</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Quiz Component
+export const Quiz = ({ lessonId, setCurrentPage }) => {
+  const { currentUser } = useAuth();
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [score, setScore] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [quizStarted, setQuizStarted] = useState(false);
+
+  // Sample quiz data
+  const quizData = {
+    1: {
+      title: "Основы веры",
+      timeLimit: 300,
+      questions: [
+        {
+          question: "Сколько столпов ислама существует?",
+          options: ["3", "4", "5", "6"],
+          correct: 2
+        },
+        {
+          question: "Как называется священная книга мусульман?",
+          options: ["Тора", "Библия", "Коран", "Веды"],
+          correct: 2
+        },
+        {
+          question: "Какой город является священным для мусульман?",
+          options: ["Медина", "Мекка", "Иерусалим", "Каир"],
+          correct: 1
+        },
+        {
+          question: "Как называется ежедневная молитва в исламе?",
+          options: ["Дуа", "Салят", "Зикр", "Таваф"],
+          correct: 1
+        },
+        {
+          question: "Сколько раз в день мусульмане должны молиться?",
+          options: ["3", "4", "5", "6"],
+          correct: 2
+        }
+      ]
+    },
+    2: {
+      title: "Практика веры",
+      timeLimit: 400,
+      questions: [
+        {
+          question: "В каком месяце мусульмане соблюдают пост?",
+          options: ["Рамадан", "Шаввал", "Зуль-Хиджа", "Мухаррам"],
+          correct: 0
+        },
+        {
+          question: "Как называется паломничество в Мекку?",
+          options: ["Умра", "Хадж", "Зиярат", "Сафар"],
+          correct: 1
+        },
+        {
+          question: "Какая сумма обязательного пожертвования в исламе?",
+          options: ["1%", "2.5%", "5%", "10%"],
+          correct: 1
+        },
+        {
+          question: "Как называется направление на Мекку для молитвы?",
+          options: ["Кибла", "Михраб", "Минарет", "Минбар"],
+          correct: 0
+        },
+        {
+          question: "В какое время начинается утренняя молитва?",
+          options: ["На рассвете", "На восходе", "В полдень", "Вечером"],
+          correct: 0
+        }
+      ]
+    },
+    3: {
+      title: "Этика ислама",
+      timeLimit: 360,
+      questions: [
+        {
+          question: "Что является основой исламской этики?",
+          options: ["Коран и Сунна", "Только Коран", "Традиции предков", "Современные законы"],
+          correct: 0
+        },
+        {
+          question: "Как ислам относится к честности в торговле?",
+          options: ["Запрещает", "Поощряет", "Не регулирует", "Ограничивает"],
+          correct: 1
+        },
+        {
+          question: "Что говорит ислам о почитании родителей?",
+          options: ["Необязательно", "Желательно", "Обязательно", "Запрещено"],
+          correct: 2
+        }
+      ]
+    },
+    4: {
+      title: "История ислама",
+      timeLimit: 600,
+      questions: [
+        {
+          question: "В каком году началось пророчество Мухаммада?",
+          options: ["610 г.", "620 г.", "630 г.", "640 г."],
+          correct: 0
+        },
+        {
+          question: "Как называется переселение из Мекки в Медину?",
+          options: ["Хиджра", "Фатх", "Газва", "Сира"],
+          correct: 0
+        },
+        {
+          question: "Кто был первым халифом после пророка Мухаммада?",
+          options: ["Али", "Умар", "Усман", "Абу Бакр"],
+          correct: 3
+        }
+      ]
+    }
+  };
+
+  const currentQuiz = quizData[lessonId];
+
+  useEffect(() => {
+    if (quizStarted && timeLeft > 0 && !showResult) {
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timer);
+    } else if (timeLeft === 0 && !showResult) {
+      handleQuizEnd();
+    }
+  }, [timeLeft, quizStarted, showResult]);
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const handleAnswerSelect = (answerIndex) => {
+    setSelectedAnswer(answerIndex);
+  };
+
+  const handleNextQuestion = () => {
+    if (selectedAnswer === currentQuiz.questions[currentQuestion].correct) {
+      setScore(score + 1);
+    }
+
+    if (currentQuestion + 1 < currentQuiz.questions.length) {
+      setCurrentQuestion(currentQuestion + 1);
+      setSelectedAnswer(null);
+    } else {
+      handleQuizEnd();
+    }
+  };
+
+  const handleQuizEnd = async () => {
+    setShowResult(true);
+    
+    if (currentUser) {
+      try {
+        // Save quiz result
+        await addDoc(collection(db, 'scores'), {
+          uid: currentUser.uid,
+          lessonId: lessonId,
+          score: score,
+          totalQuestions: currentQuiz.questions.length,
+          timeSpent: currentQuiz.timeLimit - timeLeft,
+          timestamp: serverTimestamp()
+        });
+
+        // Update user's total score
+        const userRef = doc(db, 'users', currentUser.uid);
+        const userDoc = await getDoc(userRef);
+        const currentTotalScore = userDoc.data()?.totalScore || 0;
+        
+        await updateDoc(userRef, {
+          totalScore: currentTotalScore + score
+        });
+      } catch (error) {
+        console.error('Error saving quiz result:', error);
+      }
+    }
+  };
+
+  const startQuiz = () => {
+    setQuizStarted(true);
+    setTimeLeft(currentQuiz.timeLimit);
+  };
+
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-white to-teal-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Требуется авторизация</h2>
+          <p className="text-gray-600 mb-6">Войдите в систему, чтобы проходить тесты</p>
+          <button
+            onClick={() => setCurrentPage('home')}
+            className="bg-teal-500 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition-colors"
+          >
+            Вернуться на главную
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!quizStarted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-white to-teal-50 flex items-center justify-center">
+        <div className="bg-white rounded-2xl p-8 shadow-xl max-w-md w-full mx-4">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{currentQuiz.title}</h2>
+            <div className="space-y-4 mb-6">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600">Вопросов:</span>
+                <span className="font-medium">{currentQuiz.questions.length}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600">Время:</span>
+                <span className="font-medium">{formatTime(currentQuiz.timeLimit)}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600">Баллов за урок:</span>
+                <span className="font-medium">до {currentQuiz.questions.length}</span>
+              </div>
+            </div>
+            <button
+              onClick={startQuiz}
+              className="w-full bg-teal-500 text-white py-3 px-4 rounded-lg hover:bg-teal-600 transition-colors font-medium"
+            >
+              Начать тест
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (showResult) {
+    const percentage = Math.round((score / currentQuiz.questions.length) * 100);
+    
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-white to-teal-50 flex items-center justify-center">
+        <div className="bg-white rounded-2xl p-8 shadow-xl max-w-md w-full mx-4">
+          <div className="text-center">
+            <div className="w-20 h-20 mx-auto mb-6">
+              {percentage >= 70 ? (
+                <div className="w-full h-full bg-green-100 rounded-full flex items-center justify-center">
+                  <svg className="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              ) : (
+                <div className="w-full h-full bg-red-100 rounded-full flex items-center justify-center">
+                  <svg className="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </div>
+              )}
+            </div>
+            
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Тест завершен!</h2>
+            <p className="text-gray-600 mb-6">
+              {percentage >= 70 ? 'Отличный результат!' : 'Попробуйте еще раз!'}
+            </p>
+            
+            <div className="space-y-2 mb-6">
+              <div className="flex justify-between">
+                <span>Правильных ответов:</span>
+                <span className="font-medium">{score} из {currentQuiz.questions.length}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Процент:</span>
+                <span className="font-medium">{percentage}%</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Заработано баллов:</span>
+                <span className="font-medium text-teal-600">+{score}</span>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              <button
+                onClick={() => setCurrentPage('lessons')}
+                className="w-full bg-teal-500 text-white py-3 px-4 rounded-lg hover:bg-teal-600 transition-colors font-medium"
+              >
+                К урокам
+              </button>
+              <button
+                onClick={() => setCurrentPage('leaderboard')}
+                className="w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+              >
+                Посмотреть лидерборд
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const currentQ = currentQuiz.questions[currentQuestion];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-white to-teal-50 py-12">
+      <div className="max-w-2xl mx-auto px-4">
+        {/* Header */}
+        <div className="bg-white rounded-2xl p-6 shadow-lg mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-xl font-bold text-gray-900">{currentQuiz.title}</h1>
+            <div className="text-right">
+              <div className="text-sm text-gray-600">Время</div>
+              <div className={`text-lg font-bold ${timeLeft < 60 ? 'text-red-500' : 'text-teal-600'}`}>
+                {formatTime(timeLeft)}
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex justify-between items-center">
+            <div className="text-sm text-gray-600">
+              Вопрос {currentQuestion + 1} из {currentQuiz.questions.length}
+            </div>
+            <div className="text-sm text-gray-600">
+              Набрано баллов: {score}
+            </div>
+          </div>
+          
+          <div className="w-full bg-gray-200 rounded-full h-2 mt-4">
+            <div 
+              className="bg-teal-500 h-2 rounded-full transition-all duration-300"
+              style={{ width: `${((currentQuestion + 1) / currentQuiz.questions.length) * 100}%` }}
+            ></div>
+          </div>
+        </div>
+
+        {/* Question */}
+        <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <h2 className="text-xl font-medium text-gray-900 mb-8">{currentQ.question}</h2>
+          
+          <div className="space-y-4 mb-8">
+            {currentQ.options.map((option, index) => (
+              <button
+                key={index}
+                onClick={() => handleAnswerSelect(index)}
+                className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
+                  selectedAnswer === index
+                    ? 'border-teal-500 bg-teal-50'
+                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                <div className="flex items-center">
+                  <div className={`w-4 h-4 rounded-full border-2 mr-3 ${
+                    selectedAnswer === index
+                      ? 'border-teal-500 bg-teal-500'
+                      : 'border-gray-300'
+                  }`}>
+                    {selectedAnswer === index && (
+                      <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                    )}
+                  </div>
+                  <span className="text-gray-900">{option}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+          
+          <button
+            onClick={handleNextQuestion}
+            disabled={selectedAnswer === null}
+            className="w-full bg-teal-500 text-white py-3 px-4 rounded-lg hover:bg-teal-600 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {currentQuestion + 1 === currentQuiz.questions.length ? 'Завершить тест' : 'Следующий вопрос'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
