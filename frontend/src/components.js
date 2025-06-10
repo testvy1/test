@@ -487,6 +487,11 @@ export const Leaderboard = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">🏆 Лидерборд</h1>
           <p className="text-lg text-gray-600">Топ-10 лучших учеников</p>
+          {error && (
+            <div className="mt-4 p-3 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded-lg">
+              ⚠️ {error}
+            </div>
+          )}
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -533,7 +538,7 @@ export const Leaderboard = () => {
                           {leader.name || 'Аноним'}
                         </h3>
                         <p className="text-gray-600 text-sm">
-                          Зарегистрирован: {leader.createdAt?.toDate().toLocaleDateString('ru-RU') || 'Недавно'}
+                          Зарегистрирован: {leader.createdAt?.toDate ? leader.createdAt.toDate().toLocaleDateString('ru-RU') : leader.createdAt?.toLocaleDateString('ru-RU') || 'Недавно'}
                         </p>
                       </div>
                     </div>
